@@ -13,17 +13,16 @@
 		D60C804E2D99557200B7DD58 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D60C804D2D99557200B7DD58 /* Assets.xcassets */; };
 		D60C80512D99557200B7DD58 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D60C804F2D99557200B7DD58 /* LaunchScreen.storyboard */; };
 		D60C80592D9957C200B7DD58 /* lab2.md in Resources */ = {isa = PBXBuildFile; fileRef = D60C80582D9957C200B7DD58 /* lab2.md */; };
-		D60C805E2D99CC2A00B7DD58 /* StorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60C805D2D99CC2A00B7DD58 /* StorageProtocol.swift */; };
 		D60C80612D99CC5300B7DD58 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60C80602D99CC5300B7DD58 /* User.swift */; };
 		D60C80632D99CDA100B7DD58 /* Expense.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60C80622D99CDA100B7DD58 /* Expense.swift */; };
 		D60C80662D99CE1B00B7DD58 /* DatePeriod.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60C80652D99CE1B00B7DD58 /* DatePeriod.swift */; };
 		D60C806A2D99CFC100B7DD58 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60C80692D99CFC100B7DD58 /* LoginView.swift */; };
-		D60C806D2D99D0F500B7DD58 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60C806C2D99D0F500B7DD58 /* LoginController.swift */; };
 		D60C806F2D99D47B00B7DD58 /* AddExpenseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60C806E2D99D47B00B7DD58 /* AddExpenseView.swift */; };
-		D60C80712D99D59400B7DD58 /* AddExpenseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60C80702D99D59400B7DD58 /* AddExpenseController.swift */; };
 		D60C80732D99D6EC00B7DD58 /* SummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60C80722D99D6EC00B7DD58 /* SummaryView.swift */; };
-		D60C80752D99D78000B7DD58 /* SummaryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60C80742D99D78000B7DD58 /* SummaryController.swift */; };
 		D60C80772D99D84900B7DD58 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = D60C80762D99D84900B7DD58 /* README.md */; };
+		D670D06B2DA4EAA500B1F092 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D670D06A2DA4EAA000B1F092 /* AuthService.swift */; };
+		D670D06F2DA4EC6500B1F092 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D670D06E2DA4EC5E00B1F092 /* AppRouter.swift */; };
+		D670D0732DA4EDA200B1F092 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D670D0712DA4EDA200B1F092 /* LoginViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,17 +34,16 @@
 		D60C80502D99557200B7DD58 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D60C80522D99557200B7DD58 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D60C80582D9957C200B7DD58 /* lab2.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = lab2.md; sourceTree = "<group>"; };
-		D60C805D2D99CC2A00B7DD58 /* StorageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageProtocol.swift; sourceTree = "<group>"; };
 		D60C80602D99CC5300B7DD58 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		D60C80622D99CDA100B7DD58 /* Expense.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expense.swift; sourceTree = "<group>"; };
 		D60C80652D99CE1B00B7DD58 /* DatePeriod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePeriod.swift; sourceTree = "<group>"; };
 		D60C80692D99CFC100B7DD58 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
-		D60C806C2D99D0F500B7DD58 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		D60C806E2D99D47B00B7DD58 /* AddExpenseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExpenseView.swift; sourceTree = "<group>"; };
-		D60C80702D99D59400B7DD58 /* AddExpenseController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExpenseController.swift; sourceTree = "<group>"; };
 		D60C80722D99D6EC00B7DD58 /* SummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryView.swift; sourceTree = "<group>"; };
-		D60C80742D99D78000B7DD58 /* SummaryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryController.swift; sourceTree = "<group>"; };
 		D60C80762D99D84900B7DD58 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		D670D06A2DA4EAA000B1F092 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		D670D06E2DA4EC5E00B1F092 /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
+		D670D0712DA4EDA200B1F092 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,12 +76,13 @@
 		D60C80432D99557000B7DD58 /* ios-app */ = {
 			isa = PBXGroup;
 			children = (
-				D60C806B2D99D0B600B7DD58 /* Controller */,
+				D670D0702DA4ED9300B1F092 /* App */,
+				D670D06D2DA4EC4700B1F092 /* Router */,
+				D670D0662DA4E76F00B1F092 /* Service */,
+				D670D0722DA4EDA200B1F092 /* ViewModel */,
 				D60C80682D99CEB300B7DD58 /* View */,
 				D60C805B2D99CBCA00B7DD58 /* Model */,
 				D60C80582D9957C200B7DD58 /* lab2.md */,
-				D60C80442D99557000B7DD58 /* AppDelegate.swift */,
-				D60C80462D99557000B7DD58 /* SceneDelegate.swift */,
 				D60C804A2D99557000B7DD58 /* Main.storyboard */,
 				D60C804D2D99557200B7DD58 /* Assets.xcassets */,
 				D60C804F2D99557200B7DD58 /* LaunchScreen.storyboard */,
@@ -96,48 +95,54 @@
 		D60C805B2D99CBCA00B7DD58 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				D60C805F2D99CC3A00B7DD58 /* Entities */,
-				D60C805C2D99CC0900B7DD58 /* Storage */,
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
-		D60C805C2D99CC0900B7DD58 /* Storage */ = {
-			isa = PBXGroup;
-			children = (
-				D60C805D2D99CC2A00B7DD58 /* StorageProtocol.swift */,
-			);
-			path = Storage;
-			sourceTree = "<group>";
-		};
-		D60C805F2D99CC3A00B7DD58 /* Entities */ = {
-			isa = PBXGroup;
-			children = (
 				D60C80602D99CC5300B7DD58 /* User.swift */,
 				D60C80622D99CDA100B7DD58 /* Expense.swift */,
 				D60C80652D99CE1B00B7DD58 /* DatePeriod.swift */,
 			);
-			path = Entities;
+			path = Model;
 			sourceTree = "<group>";
 		};
 		D60C80682D99CEB300B7DD58 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				D60C80692D99CFC100B7DD58 /* LoginView.swift */,
 				D60C806E2D99D47B00B7DD58 /* AddExpenseView.swift */,
+				D60C80692D99CFC100B7DD58 /* LoginView.swift */,
 				D60C80722D99D6EC00B7DD58 /* SummaryView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
 		};
-		D60C806B2D99D0B600B7DD58 /* Controller */ = {
+		D670D0662DA4E76F00B1F092 /* Service */ = {
 			isa = PBXGroup;
 			children = (
-				D60C806C2D99D0F500B7DD58 /* LoginController.swift */,
-				D60C80702D99D59400B7DD58 /* AddExpenseController.swift */,
-				D60C80742D99D78000B7DD58 /* SummaryController.swift */,
+				D670D06A2DA4EAA000B1F092 /* AuthService.swift */,
 			);
-			path = Controller;
+			path = Service;
+			sourceTree = "<group>";
+		};
+		D670D06D2DA4EC4700B1F092 /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				D670D06E2DA4EC5E00B1F092 /* AppRouter.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
+		D670D0702DA4ED9300B1F092 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				D60C80442D99557000B7DD58 /* AppDelegate.swift */,
+				D60C80462D99557000B7DD58 /* SceneDelegate.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		D670D0722DA4EDA200B1F092 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				D670D0712DA4EDA200B1F092 /* LoginViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -213,18 +218,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D60C80752D99D78000B7DD58 /* SummaryController.swift in Sources */,
 				D60C806F2D99D47B00B7DD58 /* AddExpenseView.swift in Sources */,
 				D60C80662D99CE1B00B7DD58 /* DatePeriod.swift in Sources */,
 				D60C80452D99557000B7DD58 /* AppDelegate.swift in Sources */,
 				D60C80472D99557000B7DD58 /* SceneDelegate.swift in Sources */,
-				D60C80712D99D59400B7DD58 /* AddExpenseController.swift in Sources */,
 				D60C80612D99CC5300B7DD58 /* User.swift in Sources */,
-				D60C805E2D99CC2A00B7DD58 /* StorageProtocol.swift in Sources */,
-				D60C806D2D99D0F500B7DD58 /* LoginController.swift in Sources */,
+				D670D0732DA4EDA200B1F092 /* LoginViewModel.swift in Sources */,
+				D670D06F2DA4EC6500B1F092 /* AppRouter.swift in Sources */,
 				D60C806A2D99CFC100B7DD58 /* LoginView.swift in Sources */,
 				D60C80632D99CDA100B7DD58 /* Expense.swift in Sources */,
 				D60C80732D99D6EC00B7DD58 /* SummaryView.swift in Sources */,
+				D670D06B2DA4EAA500B1F092 /* AuthService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
