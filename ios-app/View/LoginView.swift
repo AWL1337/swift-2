@@ -147,10 +147,7 @@ class LoginView: UIViewController {
     @objc private func loginTapped() {
         viewModel.login { [weak self] success in
             if success {
-                let featuresVC = UIViewController()
-                featuresVC.view.backgroundColor = .white
-                featuresVC.title = "Features"
-                self?.navigationController?.pushViewController(featuresVC, animated: true)
+                print("Login successful")
             }
         }
     }
