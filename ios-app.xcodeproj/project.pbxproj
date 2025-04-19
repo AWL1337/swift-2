@@ -25,6 +25,7 @@
 		D670D0772DA4F85000B1F092 /* ExpensesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D670D0762DA4F84B00B1F092 /* ExpensesViewModel.swift */; };
 		D6AAA5BC2DB425D40037004A /* ExpensesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6AAA5BB2DB425C50037004A /* ExpensesViewController.swift */; };
 		D6AAA5BE2DB425F80037004A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6AAA5BD2DB425EE0037004A /* LoginViewController.swift */; };
+		D6AAA5C32DB430750037004A /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6AAA5C22DB430750037004A /* AppCoordinator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +49,7 @@
 		D670D0762DA4F84B00B1F092 /* ExpensesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpensesViewModel.swift; sourceTree = "<group>"; };
 		D6AAA5BB2DB425C50037004A /* ExpensesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpensesViewController.swift; sourceTree = "<group>"; };
 		D6AAA5BD2DB425EE0037004A /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		D6AAA5C22DB430750037004A /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +82,7 @@
 		D60C80432D99557000B7DD58 /* ios-app */ = {
 			isa = PBXGroup;
 			children = (
+				D6AAA5BF2DB4304D0037004A /* Coordinator */,
 				D670D0702DA4ED9300B1F092 /* App */,
 				D670D06D2DA4EC4700B1F092 /* Router */,
 				D670D0662DA4E76F00B1F092 /* Service */,
@@ -149,6 +152,14 @@
 				D670D0712DA4EDA200B1F092 /* LoginViewModel.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		D6AAA5BF2DB4304D0037004A /* Coordinator */ = {
+			isa = PBXGroup;
+			children = (
+				D6AAA5C22DB430750037004A /* AppCoordinator.swift */,
+			);
+			path = Coordinator;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -230,6 +241,7 @@
 				D60C80452D99557000B7DD58 /* AppDelegate.swift in Sources */,
 				D670D0772DA4F85000B1F092 /* ExpensesViewModel.swift in Sources */,
 				D60C80472D99557000B7DD58 /* SceneDelegate.swift in Sources */,
+				D6AAA5C32DB430750037004A /* AppCoordinator.swift in Sources */,
 				D60C80612D99CC5300B7DD58 /* User.swift in Sources */,
 				D670D0732DA4EDA200B1F092 /* LoginViewModel.swift in Sources */,
 				D670D06F2DA4EC6500B1F092 /* AppRouter.swift in Sources */,

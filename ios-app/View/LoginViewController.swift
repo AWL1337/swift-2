@@ -6,6 +6,7 @@ protocol LoginViewControllerProtocol: AnyObject {
     var passwordTextField: UITextField { get }
     var loginButton: UIButton { get }
     var errorLabel: UILabel { get }
+    var viewModel: LoginViewModel { get }
     
     func updateLoginButtonState()
     func emailChanged(_ text: String)
@@ -14,7 +15,7 @@ protocol LoginViewControllerProtocol: AnyObject {
 }
 
 class LoginViewController: UIViewController, LoginViewControllerProtocol {
-    private let viewModel: LoginViewModel
+    let viewModel: LoginViewModel
     private var cancellables = Set<AnyCancellable>()
     
     let emailTextField: UITextField = {
