@@ -1,9 +1,22 @@
 import UIKit
 
-class LoginViewController: UIViewController {
+protocol LoginViewControllerProtocol: AnyObject {
+    var emailTextField: UITextField { get }
+    var passwordTextField: UITextField { get }
+    var loginButton: UIButton { get }
+    var errorLabel: UILabel { get }
+    
+    func updateLoginButtonState()
+    
+    func emailChanged(_ text: String)
+    func passwordChanged(_ text: String)
+    func loginTapped(completion: @escaping (Bool) -> Void)
+}
+
+class LoginViewController: UIViewController, LoginViewControllerProtocol {
     private let viewModel: LoginViewModel
     
-    private let emailTextField: UITextField = {
+    let emailTextField: UITextField = {
         let tf = UITextField()
         tf.placeholder = "Email"
         tf.borderStyle = .roundedRect
@@ -14,7 +27,7 @@ class LoginViewController: UIViewController {
         return tf
     }()
     
-    private let passwordTextField: UITextField = {
+    let passwordTextField: UITextField = {
         let tf = UITextField()
         tf.placeholder = "Password"
         tf.borderStyle = .roundedRect
@@ -24,7 +37,7 @@ class LoginViewController: UIViewController {
         return tf
     }()
     
-    private let loginButton: UIButton = {
+    let loginButton: UIButton = {
         let btn = UIButton(type: .system)
         btn.setTitle("Login", for: .normal)
         btn.titleLabel?.font = .systemFont(ofSize: 16, weight: .bold)
@@ -33,7 +46,7 @@ class LoginViewController: UIViewController {
         return btn
     }()
     
-    private let errorLabel: UILabel = {
+    let errorLabel: UILabel = {
         let lbl = UILabel()
         lbl.textColor = .red
         lbl.textAlignment = .center
@@ -86,13 +99,11 @@ class LoginViewController: UIViewController {
         stackView.addArrangedSubview(errorLabel)
         
         NSLayoutConstraint.activate([
-            
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
-           
             stackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 20),
             stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 20),
             stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -20),
@@ -102,8 +113,8 @@ class LoginViewController: UIViewController {
     }
     
     private func bindViewModel() {
-        emailTextField.addTarget(self, action: #selector(emailChanged), for: .editingChanged)
-        passwordTextField.addTarget(self, action: #selector(passwordChanged), for: .editingChanged)
+        emailTextField.addTarget(self, action: #selector(onEmailTextChanged), for: .editingChanged)
+        passwordTextField.addTarget(self, action: #selector(onPasswordTextChanged), for: .editingChanged)
         
         viewModel.isEmailValid.bind { [weak self] isValid in
             self?.emailTextField.layer.borderColor = isValid ? UIColor.green.cgColor : UIColor.red.cgColor
@@ -133,26 +144,38 @@ class LoginViewController: UIViewController {
     }
     
     private func setupActions() {
-        loginButton.addTarget(self, action: #selector(loginTapped), for: .touchUpInside)
+        loginButton.addTarget(self, action: #selector(onLoginButtonTapped), for: .touchUpInside)
     }
     
-    @objc private func emailChanged() {
-        viewModel.email = emailTextField.text ?? ""
+    @objc private func onEmailTextChanged(_ textField: UITextField) {
+        emailChanged(textField.text ?? "")
     }
     
-    @objc private func passwordChanged() {
-        viewModel.password = passwordTextField.text ?? ""
+    @objc private func onPasswordTextChanged(_ textField: UITextField) {
+        passwordChanged(textField.text ?? "")
     }
     
-    @objc private func loginTapped() {
-        viewModel.login { [weak self] success in
+    @objc private func onLoginButtonTapped(_ sender: UIButton) {
+        loginTapped { success in
             if success {
                 print("Login successful")
             }
         }
     }
     
-    private func updateLoginButtonState() {
+    func emailChanged(_ text: String) {
+        viewModel.email = text
+    }
+    
+    func passwordChanged(_ text: String) {
+        viewModel.password = text
+    }
+    
+    func loginTapped(completion: @escaping (Bool) -> Void) {
+        viewModel.login(completion: completion)
+    }
+    
+    func updateLoginButtonState() {
         let isFormValid = viewModel.isEmailValid.value && viewModel.isPasswordValid.value
         loginButton.isEnabled = isFormValid && !viewModel.isLoading.value
         loginButton.alpha = loginButton.isEnabled ? 1.0 : 0.5
