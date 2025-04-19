@@ -1,6 +1,6 @@
 import UIKit
 
-class LoginView: UIViewController {
+class LoginViewController: UIViewController {
     private let viewModel: LoginViewModel
     
     private let emailTextField: UITextField = {

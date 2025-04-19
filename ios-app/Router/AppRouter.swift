@@ -11,7 +11,7 @@ class AppRouter {
     func start() {
         let authService = NetworkAuthService()
         let viewModel = LoginViewModel(authService: authService)
-        let loginVC = LoginView(viewModel: viewModel)
+        let loginVC = LoginViewController(viewModel: viewModel)
         navigationController = UINavigationController(rootViewController: loginVC)
         window.rootViewController = navigationController
         window.makeKeyAndVisible()

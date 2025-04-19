@@ -16,7 +16,6 @@
 		D60C80612D99CC5300B7DD58 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60C80602D99CC5300B7DD58 /* User.swift */; };
 		D60C80632D99CDA100B7DD58 /* Expense.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60C80622D99CDA100B7DD58 /* Expense.swift */; };
 		D60C80662D99CE1B00B7DD58 /* DatePeriod.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60C80652D99CE1B00B7DD58 /* DatePeriod.swift */; };
-		D60C806A2D99CFC100B7DD58 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60C80692D99CFC100B7DD58 /* LoginView.swift */; };
 		D60C80732D99D6EC00B7DD58 /* SummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60C80722D99D6EC00B7DD58 /* SummaryView.swift */; };
 		D60C80772D99D84900B7DD58 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = D60C80762D99D84900B7DD58 /* README.md */; };
 		D670D06B2DA4EAA500B1F092 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D670D06A2DA4EAA000B1F092 /* AuthService.swift */; };
@@ -24,7 +23,8 @@
 		D670D0732DA4EDA200B1F092 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D670D0712DA4EDA200B1F092 /* LoginViewModel.swift */; };
 		D670D0752DA4F81E00B1F092 /* ExpenseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D670D0742DA4F81A00B1F092 /* ExpenseService.swift */; };
 		D670D0772DA4F85000B1F092 /* ExpensesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D670D0762DA4F84B00B1F092 /* ExpensesViewModel.swift */; };
-		D670D0792DA4F8A700B1F092 /* ExpensesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D670D0782DA4F89F00B1F092 /* ExpensesView.swift */; };
+		D6AAA5BC2DB425D40037004A /* ExpensesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6AAA5BB2DB425C50037004A /* ExpensesViewController.swift */; };
+		D6AAA5BE2DB425F80037004A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6AAA5BD2DB425EE0037004A /* LoginViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,7 +39,6 @@
 		D60C80602D99CC5300B7DD58 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		D60C80622D99CDA100B7DD58 /* Expense.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expense.swift; sourceTree = "<group>"; };
 		D60C80652D99CE1B00B7DD58 /* DatePeriod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePeriod.swift; sourceTree = "<group>"; };
-		D60C80692D99CFC100B7DD58 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		D60C80722D99D6EC00B7DD58 /* SummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryView.swift; sourceTree = "<group>"; };
 		D60C80762D99D84900B7DD58 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		D670D06A2DA4EAA000B1F092 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
@@ -47,7 +46,8 @@
 		D670D0712DA4EDA200B1F092 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		D670D0742DA4F81A00B1F092 /* ExpenseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseService.swift; sourceTree = "<group>"; };
 		D670D0762DA4F84B00B1F092 /* ExpensesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpensesViewModel.swift; sourceTree = "<group>"; };
-		D670D0782DA4F89F00B1F092 /* ExpensesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpensesView.swift; sourceTree = "<group>"; };
+		D6AAA5BB2DB425C50037004A /* ExpensesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpensesViewController.swift; sourceTree = "<group>"; };
+		D6AAA5BD2DB425EE0037004A /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,8 +109,8 @@
 		D60C80682D99CEB300B7DD58 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				D670D0782DA4F89F00B1F092 /* ExpensesView.swift */,
-				D60C80692D99CFC100B7DD58 /* LoginView.swift */,
+				D6AAA5BD2DB425EE0037004A /* LoginViewController.swift */,
+				D6AAA5BB2DB425C50037004A /* ExpensesViewController.swift */,
 				D60C80722D99D6EC00B7DD58 /* SummaryView.swift */,
 			);
 			path = View;
@@ -224,15 +224,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D6AAA5BE2DB425F80037004A /* LoginViewController.swift in Sources */,
 				D60C80662D99CE1B00B7DD58 /* DatePeriod.swift in Sources */,
+				D6AAA5BC2DB425D40037004A /* ExpensesViewController.swift in Sources */,
 				D60C80452D99557000B7DD58 /* AppDelegate.swift in Sources */,
-				D670D0792DA4F8A700B1F092 /* ExpensesView.swift in Sources */,
 				D670D0772DA4F85000B1F092 /* ExpensesViewModel.swift in Sources */,
 				D60C80472D99557000B7DD58 /* SceneDelegate.swift in Sources */,
 				D60C80612D99CC5300B7DD58 /* User.swift in Sources */,
 				D670D0732DA4EDA200B1F092 /* LoginViewModel.swift in Sources */,
 				D670D06F2DA4EC6500B1F092 /* AppRouter.swift in Sources */,
-				D60C806A2D99CFC100B7DD58 /* LoginView.swift in Sources */,
 				D670D0752DA4F81E00B1F092 /* ExpenseService.swift in Sources */,
 				D60C80632D99CDA100B7DD58 /* Expense.swift in Sources */,
 				D60C80732D99D6EC00B7DD58 /* SummaryView.swift in Sources */,
