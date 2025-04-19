@@ -1,4 +1,5 @@
 import UIKit
+import Combine
 
 protocol LoginViewControllerProtocol: AnyObject {
     var emailTextField: UITextField { get }
@@ -7,7 +8,6 @@ protocol LoginViewControllerProtocol: AnyObject {
     var errorLabel: UILabel { get }
     
     func updateLoginButtonState()
-    
     func emailChanged(_ text: String)
     func passwordChanged(_ text: String)
     func loginTapped(completion: @escaping (Bool) -> Void)
@@ -15,6 +15,7 @@ protocol LoginViewControllerProtocol: AnyObject {
 
 class LoginViewController: UIViewController, LoginViewControllerProtocol {
     private let viewModel: LoginViewModel
+    private var cancellables = Set<AnyCancellable>()
     
     let emailTextField: UITextField = {
         let tf = UITextField()
@@ -116,31 +117,43 @@ class LoginViewController: UIViewController, LoginViewControllerProtocol {
         emailTextField.addTarget(self, action: #selector(onEmailTextChanged), for: .editingChanged)
         passwordTextField.addTarget(self, action: #selector(onPasswordTextChanged), for: .editingChanged)
         
-        viewModel.isEmailValid.bind { [weak self] isValid in
-            self?.emailTextField.layer.borderColor = isValid ? UIColor.green.cgColor : UIColor.red.cgColor
-            self?.updateLoginButtonState()
-        }
+        viewModel.isEmailValid
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isValid in
+                self?.emailTextField.layer.borderColor = isValid ? UIColor.green.cgColor : UIColor.red.cgColor
+                self?.updateLoginButtonState()
+            }
+            .store(in: &cancellables)
         
-        viewModel.isPasswordValid.bind { [weak self] isValid in
-            self?.passwordTextField.layer.borderColor = isValid ? UIColor.green.cgColor : UIColor.red.cgColor
-            self?.updateLoginButtonState()
-        }
+        viewModel.isPasswordValid
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isValid in
+                self?.passwordTextField.layer.borderColor = isValid ? UIColor.green.cgColor : UIColor.red.cgColor
+                self?.updateLoginButtonState()
+            }
+            .store(in: &cancellables)
         
-        viewModel.errorMessage.bind { [weak self] message in
-            self?.errorLabel.text = message
-            self?.errorLabel.isHidden = message == nil
-            if message != nil {
-                UIView.animate(withDuration: 0.3) {
-                    self?.errorLabel.alpha = 1.0
+        viewModel.errorMessage
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] message in
+                self?.errorLabel.text = message
+                self?.errorLabel.isHidden = message == nil
+                if message != nil {
+                    UIView.animate(withDuration: 0.3) {
+                        self?.errorLabel.alpha = 1.0
+                    }
                 }
             }
-        }
+            .store(in: &cancellables)
         
-        viewModel.isLoading.bind { [weak self] isLoading in
-            self?.loginButton.isEnabled = !isLoading
-            self?.loginButton.setTitle(isLoading ? "Loading..." : "Login", for: .normal)
-            self?.loginButton.alpha = isLoading ? 0.5 : 1.0
-        }
+        viewModel.isLoading
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                self?.loginButton.isEnabled = !isLoading
+                self?.loginButton.setTitle(isLoading ? "Loading..." : "Login", for: .normal)
+                self?.loginButton.alpha = isLoading ? 0.5 : 1.0
+            }
+            .store(in: &cancellables)
     }
     
     private func setupActions() {
