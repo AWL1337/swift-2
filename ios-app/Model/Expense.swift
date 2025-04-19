@@ -1,6 +1,6 @@
 import Foundation
 
-struct Expense {
+struct Expense: Codable {
     let id: UUID
     let userId: UUID
     let amount: Double

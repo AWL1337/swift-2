@@ -50,7 +50,11 @@ class LoginViewModel {
 
 class Observable<T> {
     var value: T {
-        didSet { listener?(value) }
+        didSet {
+            DispatchQueue.main.async {
+                self.listener?(self.value)
+            }
+        }
     }
     private var listener: ((T) -> Void)?
     
@@ -60,6 +64,8 @@ class Observable<T> {
     
     func bind(_ listener: @escaping (T) -> Void) {
         self.listener = listener
-        listener(value)
+        DispatchQueue.main.async {
+            listener(self.value)
+        }
     }
 }
