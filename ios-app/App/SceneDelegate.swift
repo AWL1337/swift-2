@@ -11,7 +11,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window = window
         
         let router = AppRouter(window: window)
-        let coordinator = AppCoordinator(router: router)
+        let expenseService = NetworkExpenseService()
+        let coordinator = AppCoordinator(router: router, expenseService: expenseService)
         self.appCoordinator = coordinator
         coordinator.start()
     }

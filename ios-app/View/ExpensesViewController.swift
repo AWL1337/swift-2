@@ -1,23 +1,37 @@
 import UIKit
 import Combine
 
+protocol ExpensesViewControllerDelegate: AnyObject {
+    func didRequestLogout()
+}
+
 protocol ExpensesViewControllerProtocol: AnyObject {
     var tableView: UITableView { get }
     
     func reloadData()
     func showError(_ message: String)
     func setLoading(_ isLoading: Bool)
+    func logout()
 }
 
 class ExpensesViewController: UIViewController, ExpensesViewControllerProtocol {
     private let viewModel: ExpensesViewModel
     private var cancellables = Set<AnyCancellable>()
+    weak var delegate: ExpensesViewControllerDelegate?
     
     let tableView: UITableView = {
         let tv = UITableView()
         tv.translatesAutoresizingMaskIntoConstraints = false
         tv.register(UITableViewCell.self, forCellReuseIdentifier: "ExpenseCell")
         return tv
+    }()
+    
+    private let logoutButton: UIButton = {
+        let btn = UIButton(type: .system)
+        btn.setTitle("Logout", for: .normal)
+        btn.titleLabel?.font = .systemFont(ofSize: 16, weight: .bold)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        return btn
     }()
     
     init(viewModel: ExpensesViewModel) {
@@ -41,14 +55,22 @@ class ExpensesViewController: UIViewController, ExpensesViewControllerProtocol {
         title = "Expenses"
         
         view.addSubview(tableView)
+        view.addSubview(logoutButton)
         tableView.dataSource = self
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            tableView.bottomAnchor.constraint(equalTo: logoutButton.topAnchor, constant: -16),
+            
+            logoutButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            logoutButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            logoutButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            logoutButton.heightAnchor.constraint(equalToConstant: 44)
         ])
+        
+        logoutButton.addTarget(self, action: #selector(logoutTapped), for: .touchUpInside)
     }
     
     private func bindViewModel() {
@@ -91,6 +113,14 @@ class ExpensesViewController: UIViewController, ExpensesViewControllerProtocol {
     
     func setLoading(_ isLoading: Bool) {
         print("Set loading state: \(isLoading)")
+    }
+    
+    func logout() {
+        delegate?.didRequestLogout()
+    }
+    
+    @objc private func logoutTapped() {
+        logout()
     }
 }
 
