@@ -86,7 +86,7 @@ class ExpenseView: UIView, ConfigurableView {
         imageView.image = nil
         activityIndicator.startAnimating()
         
-        if let url = URL(string: "https://example.com/image.jpg") {
+        if let url = URL(string: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsyUbmjer47M8-qR6gCIoiLEdz_89XkbJB9w&s") {
             URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
                 DispatchQueue.main.async {
                     self?.activityIndicator.stopAnimating()
