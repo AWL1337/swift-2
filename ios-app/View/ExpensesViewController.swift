@@ -31,14 +31,8 @@ class ExpensesViewController: UIViewController, ExpensesViewControllerProtocol, 
         return tv
     }()
     
-    private let logoutButton: UIButton = {
-        let btn = UIButton(type: .system)
-        btn.setTitle("Logout", for: .normal)
-        btn.titleLabel?.font = .systemFont(ofSize: 16, weight: .bold)
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        return btn
-    }()
-    
+    private let logoutButton = DSButton()
+    private let stackView = DSStackView()
     private let refreshControl: UIRefreshControl = {
         let rc = UIRefreshControl()
         return rc
@@ -64,37 +58,45 @@ class ExpensesViewController: UIViewController, ExpensesViewControllerProtocol, 
     }
     
     private func setupUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = DSTokens.Color.background
         title = "Expenses"
         
-        view.addSubview(tableView)
-        view.addSubview(logoutButton)
+        logoutButton.configure(with: DSButtonViewModel(
+            title: "Logout",
+            style: .secondary,
+            action: { [weak self] in
+                self?.logoutTapped()
+            }
+        ))
         
         tableView.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         
-        tableView.heightAnchor.constraint(greaterThanOrEqualToConstant: 100).isActive = true
-        logoutButton.widthAnchor.constraint(equalToConstant: 200).isActive = true
+        stackView.configure(with: DSStackViewModel(
+            axis: .vertical,
+            alignment: .fill,
+            spacing: DSTokens.Spacing.medium,
+            views: [tableView, logoutButton]
+        ))
+        
+        view.addSubview(stackView)
         
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: logoutButton.topAnchor, constant: -16),
+            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
-            logoutButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            logoutButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            logoutButton.heightAnchor.constraint(equalToConstant: 44)
+            logoutButton.heightAnchor.constraint(equalToConstant: 44),
+            logoutButton.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: DSTokens.Spacing.large),
+            logoutButton.trailingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: -DSTokens.Spacing.large)
         ])
-        
-        logoutButton.addTarget(self, action: #selector(logoutTapped), for: .touchUpInside)
     }
     
     private func bindViewModel() {
         viewModel.expenses
             .receive(on: DispatchQueue.main)
             .sink { [weak self] expenses in
-                print("ExpensesViewController: Loaded expenses: \(expenses.count)")
                 self?.tableManager.update(with: expenses)
                 self?.reloadData()
             }
@@ -103,7 +105,6 @@ class ExpensesViewController: UIViewController, ExpensesViewControllerProtocol, 
         viewModel.isLoading
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isLoading in
-                print("ExpensesViewController: Loading: \(isLoading)")
                 self?.setLoading(isLoading)
             }
             .store(in: &cancellables)
@@ -112,7 +113,6 @@ class ExpensesViewController: UIViewController, ExpensesViewControllerProtocol, 
             .receive(on: DispatchQueue.main)
             .sink { [weak self] message in
                 if let message = message {
-                    print("ExpensesViewController: Error: \(message)")
                     self?.showError(message)
                 }
             }
@@ -120,19 +120,16 @@ class ExpensesViewController: UIViewController, ExpensesViewControllerProtocol, 
     }
     
     func reloadData() {
-        print("ExpensesViewController: Reloading table with \(viewModel.expenses.value.count) expenses")
         tableView.reloadData()
     }
     
     func showError(_ message: String) {
-        print("ExpensesViewController: Showing error: \(message)")
         let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
     
     func setLoading(_ isLoading: Bool) {
-        print("ExpensesViewController: Set loading state: \(isLoading)")
         if isLoading {
             refreshControl.beginRefreshing()
         } else {
@@ -145,17 +142,14 @@ class ExpensesViewController: UIViewController, ExpensesViewControllerProtocol, 
     }
     
     @objc private func logoutTapped() {
-        print("ExpensesViewController: Logout button tapped")
         logout()
     }
     
     @objc private func refreshData() {
-        print("ExpensesViewController: Pull-to-Refresh triggered")
         viewModel.fetchExpenses()
     }
     
     func didSelectExpense(_ expense: ExpenseItem) {
-        print("ExpensesViewController: Delegate selected expense: \(expense.amount) - \(expense.category)")
         selectionDelegate?.didSelectExpense(expense)
     }
 }

@@ -6,76 +6,21 @@ protocol LoginViewControllerDelegate: AnyObject {
 }
 
 protocol LoginViewControllerProtocol: AnyObject {
-    var emailTextField: UITextField { get }
-    var passwordTextField: UITextField { get }
-    var loginButton: UIButton { get }
-    var errorLabel: UILabel { get }
-    var viewModel: LoginViewModel { get }
-    
-    func updateLoginButtonState()
-    func emailChanged(_ text: String)
-    func passwordChanged(_ text: String)
-    func loginTapped(completion: @escaping (Bool) -> Void)
+    func showError(_ message: String)
 }
 
 class LoginViewController: UIViewController, LoginViewControllerProtocol {
-    let viewModel: LoginViewModel
+    private let viewModel: LoginViewModel
     private var cancellables = Set<AnyCancellable>()
     weak var delegate: LoginViewControllerDelegate?
     
-    let emailTextField: UITextField = {
-        let tf = UITextField()
-        tf.placeholder = "Email"
-        tf.borderStyle = .roundedRect
-        tf.autocapitalizationType = .none
-        tf.keyboardType = .emailAddress
-        tf.layer.borderWidth = 1.0
-        tf.layer.cornerRadius = 5.0
-        return tf
-    }()
-    
-    let passwordTextField: UITextField = {
-        let tf = UITextField()
-        tf.placeholder = "Password"
-        tf.borderStyle = .roundedRect
-        tf.isSecureTextEntry = true
-        tf.layer.borderWidth = 1.0
-        tf.layer.cornerRadius = 5.0
-        return tf
-    }()
-    
-    let loginButton: UIButton = {
-        let btn = UIButton(type: .system)
-        btn.setTitle("Login", for: .normal)
-        btn.titleLabel?.font = .systemFont(ofSize: 16, weight: .bold)
-        btn.isEnabled = false
-        btn.alpha = 0.5
-        return btn
-    }()
-    
-    let errorLabel: UILabel = {
-        let lbl = UILabel()
-        lbl.textColor = .red
-        lbl.textAlignment = .center
-        lbl.numberOfLines = 0
-        lbl.font = .systemFont(ofSize: 14)
-        lbl.isHidden = true
-        return lbl
-    }()
-    
-    private let stackView: UIStackView = {
-        let sv = UIStackView()
-        sv.axis = .vertical
-        sv.spacing = 16
-        sv.translatesAutoresizingMaskIntoConstraints = false
-        return sv
-    }()
-    
-    private let scrollView: UIScrollView = {
-        let sv = UIScrollView()
-        sv.translatesAutoresizingMaskIntoConstraints = false
-        return sv
-    }()
+    // UI элементы дизайн-системы
+    private let titleLabel = DSLabel()
+    private let emailTextInput = DSTextInput()
+    private let passwordTextInput = DSTextInput()
+    private let loginButton = DSButton()
+    private let errorLabel = DSLabel()
+    private let stackView = DSStackView()
     
     init(viewModel: LoginViewModel) {
         self.viewModel = viewModel
@@ -90,129 +35,102 @@ class LoginViewController: UIViewController, LoginViewControllerProtocol {
         super.viewDidLoad()
         setupUI()
         bindViewModel()
-        setupActions()
     }
     
     private func setupUI() {
-        view.backgroundColor = .white
-        title = "Login"
+        view.backgroundColor = DSTokens.Color.background
         
-        view.addSubview(scrollView)
-        scrollView.addSubview(stackView)
+        // Конфигурация компонентов
+        titleLabel.configure(with: DSLabelViewModel(text: "Login", style: .title))
+        emailTextInput.configure(with: DSTextInputViewModel(
+            placeholder: "Email",
+            style: .default,
+            onTextChanged: { [weak self] text in
+                self?.viewModel.email.send(text)
+            }
+        ))
+        passwordTextInput.configure(with: DSTextInputViewModel(
+            placeholder: "Password",
+            style: .secure,
+            onTextChanged: { [weak self] text in
+                self?.viewModel.password.send(text)
+            }
+        ))
+        loginButton.configure(with: DSButtonViewModel(
+            title: "Login",
+            style: .primary,
+            action: { [weak self] in
+                self?.loginTapped()
+            }
+        ))
+        errorLabel.configure(with: DSLabelViewModel(
+            text: "",
+            style: .caption,
+            textColor: DSTokens.Color.error
+        ))
         
-        stackView.addArrangedSubview(emailTextField)
-        stackView.addArrangedSubview(passwordTextField)
-        stackView.addArrangedSubview(loginButton)
-        stackView.addArrangedSubview(errorLabel)
+        // Компоновка с помощью DSStackView
+        stackView.configure(with: DSStackViewModel(
+            axis: .vertical,
+            alignment: .center,
+            spacing: DSTokens.Spacing.medium,
+            views: [titleLabel, emailTextInput, passwordTextInput, loginButton, errorLabel]
+        ))
         
-        emailTextField.heightAnchor.constraint(equalToConstant: 44).isActive = true
-        passwordTextField.heightAnchor.constraint(equalToConstant: 44).isActive = true
-        loginButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
-        errorLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 20).isActive = true
+        view.addSubview(stackView)
         
+        // Ограничения
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: DSTokens.Spacing.large),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -DSTokens.Spacing.large),
             
-            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 20),
-            stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 20),
-            stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -20),
-            stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -20),
-            stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -40)
+            emailTextInput.widthAnchor.constraint(equalTo: stackView.widthAnchor),
+            passwordTextInput.widthAnchor.constraint(equalTo: stackView.widthAnchor),
+            loginButton.widthAnchor.constraint(equalTo: stackView.widthAnchor)
         ])
     }
     
     private func bindViewModel() {
-        emailTextField.addTarget(self, action: #selector(onEmailTextChanged), for: .editingChanged)
-        passwordTextField.addTarget(self, action: #selector(onPasswordTextChanged), for: .editingChanged)
-        
-        viewModel.$isEmailValid
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] isValid in
-                self?.emailTextField.layer.borderColor = isValid ? UIColor.green.cgColor : UIColor.red.cgColor
-                self?.updateLoginButtonState()
-            }
-            .store(in: &cancellables)
-        
-        viewModel.$isPasswordValid
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] isValid in
-                self?.passwordTextField.layer.borderColor = isValid ? UIColor.green.cgColor : UIColor.red.cgColor
-                self?.updateLoginButtonState()
-            }
-            .store(in: &cancellables)
-        
-        viewModel.$errorMessage
+        viewModel.errorMessage
             .receive(on: DispatchQueue.main)
             .sink { [weak self] message in
-                self?.errorLabel.text = message
-                self?.errorLabel.isHidden = message == nil
-                if message != nil {
-                    UIView.animate(withDuration: 0.3) {
-                        self?.errorLabel.alpha = 1.0
-                    }
+                if let message = message {
+                    self?.showError(message)
                 }
             }
             .store(in: &cancellables)
         
-        viewModel.$isLoading
+        viewModel.isLoading
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isLoading in
                 self?.loginButton.isEnabled = !isLoading
-                self?.loginButton.setTitle(isLoading ? "Loading..." : "Login", for: .normal)
-                self?.loginButton.alpha = isLoading ? 0.5 : 1.0
+            }
+            .store(in: &cancellables)
+        
+        viewModel.loginResult
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success:
+                    self?.delegate?.didLoginSuccessfully()
+                case .failure(let error):
+                    self?.showError(error.localizedDescription)
+                }
             }
             .store(in: &cancellables)
     }
     
-    private func setupActions() {
-        loginButton.addTarget(self, action: #selector(onLoginButtonTapped), for: .touchUpInside)
+    func showError(_ message: String) {
+        errorLabel.configure(with: DSLabelViewModel(
+            text: message,
+            style: .caption,
+            textColor: DSTokens.Color.error
+        ))
     }
     
-    @objc private func onEmailTextChanged(_ textField: UITextField) {
-        emailChanged(textField.text ?? "")
-    }
-    
-    @objc private func onPasswordTextChanged(_ textField: UITextField) {
-        passwordChanged(textField.text ?? "")
-    }
-    
-    @objc private func onLoginButtonTapped(_ sender: UIButton) {
-        print("LoginViewController: Login button tapped")
-        loginTapped { [weak self] success in
-            print("LoginViewController: Login completion called, success: \(success)")
-            if success {
-                print("LoginViewController: Login successful")
-                if let delegate = self?.delegate {
-                    print("LoginViewController: Delegate is set, calling didLoginSuccessfully")
-                    delegate.didLoginSuccessfully()
-                } else {
-                    print("LoginViewController: Delegate is nil, cannot call didLoginSuccessfully")
-                }
-            } else {
-                print("LoginViewController: Login failed")
-            }
-        }
-    }
-
-    func loginTapped(completion: @escaping (Bool) -> Void) {
-        print("LoginViewController: loginTapped called")
-        viewModel.login(completion: completion)
-    }
-    
-    func emailChanged(_ text: String) {
-        viewModel.email = text
-    }
-    
-    func passwordChanged(_ text: String) {
-        viewModel.password = text
-    }
-    
-    func updateLoginButtonState() {
-        let isFormValid = viewModel.isEmailValid && viewModel.isPasswordValid
-        loginButton.isEnabled = isFormValid && !viewModel.isLoading
-        loginButton.alpha = loginButton.isEnabled ? 1.0 : 0.5
+    private func loginTapped() {
+        viewModel.login()
     }
 }

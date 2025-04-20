@@ -5,41 +5,33 @@ class LoginViewModel {
     private let authService: AuthService
     private var cancellables = Set<AnyCancellable>()
     
-    @Published var email: String = ""
-    @Published var password: String = ""
-    @Published var isEmailValid: Bool = false
-    @Published var isPasswordValid: Bool = false
-    @Published var isLoading: Bool = false
-    @Published var errorMessage: String? = nil
+    let email = CurrentValueSubject<String, Never>("")
+    let password = CurrentValueSubject<String, Never>("")
+    let errorMessage = CurrentValueSubject<String?, Never>(nil)
+    let isLoading = CurrentValueSubject<Bool, Never>(false)
+    let loginResult = PassthroughSubject<Result<Void, Error>, Never>()
     
     init(authService: AuthService) {
         self.authService = authService
-        
-        $email
-            .debounce(for: .milliseconds(300), scheduler: DispatchQueue.main)
-            .map { $0.contains("@") && $0.contains(".") }
-            .assign(to: \.isEmailValid, on: self)
-            .store(in: &cancellables)
-        
-        $password
-            .debounce(for: .milliseconds(300), scheduler: DispatchQueue.main)
-            .map { $0.count >= 6 }
-            .assign(to: \.isPasswordValid, on: self)
-            .store(in: &cancellables)
     }
     
-    func login(completion: @escaping (Bool) -> Void) {
-        isLoading = true
-        authService.login(email: email, password: password) { [weak self] result in
+    func login() {
+        guard !email.value.isEmpty, !password.value.isEmpty else {
+            errorMessage.send("Email and password cannot be empty")
+            loginResult.send(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Email and password cannot be empty"])))
+            return
+        }
+        
+        isLoading.send(true)
+        authService.login(email: email.value, password: password.value) { [weak self] result in
             DispatchQueue.main.async {
-                self?.isLoading = false
+                self?.isLoading.send(false)
                 switch result {
-                case .success(let user):
-                    print("Logged in user: \(user.name)")
-                    completion(true)
+                case .success:
+                    self?.loginResult.send(.success(()))
                 case .failure(let error):
-                    self?.errorMessage = error.localizedDescription
-                    completion(false)
+                    self?.errorMessage.send(error.localizedDescription)
+                    self?.loginResult.send(.failure(error))
                 }
             }
         }

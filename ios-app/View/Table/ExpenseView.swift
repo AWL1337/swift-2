@@ -1,28 +1,9 @@
 import UIKit
 
 class ExpenseView: UIView, ConfigurableView {
-    private let amountLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 16, weight: .bold)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private let categoryLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 14)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private let dateLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 12)
-        label.textColor = .gray
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
+    private let amountLabel = DSLabel()
+    private let categoryLabel = DSLabel()
+    private let dateLabel = DSLabel()
     private let imageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
@@ -37,6 +18,8 @@ class ExpenseView: UIView, ConfigurableView {
         return ai
     }()
     
+    private let contentStackView = DSStackView()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -47,54 +30,62 @@ class ExpenseView: UIView, ConfigurableView {
     }
     
     private func setupUI() {
-        addSubview(amountLabel)
-        addSubview(categoryLabel)
-        addSubview(dateLabel)
+        amountLabel.configure(with: DSLabelViewModel(text: "", style: .body))
+        categoryLabel.configure(with: DSLabelViewModel(text: "", style: .body))
+        dateLabel.configure(with: DSLabelViewModel(text: "", style: .caption))
+        
+        contentStackView.configure(with: DSStackViewModel(
+            axis: .vertical,
+            alignment: .leading,
+            spacing: DSTokens.Spacing.small,
+            views: [amountLabel, categoryLabel, dateLabel]
+        ))
+        
+        let cardView = DSCardView()
+        cardView.configure(with: DSCardViewModel(style: .default, contentView: contentStackView))
+        
+        addSubview(cardView)
         addSubview(imageView)
         addSubview(activityIndicator)
         
         NSLayoutConstraint.activate([
+            cardView.topAnchor.constraint(equalTo: topAnchor),
+            cardView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            cardView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            cardView.trailingAnchor.constraint(equalTo: imageView.leadingAnchor, constant: -DSTokens.Spacing.medium),
             
-            imageView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-            imageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            imageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -DSTokens.Spacing.medium),
             imageView.widthAnchor.constraint(equalToConstant: 50),
             imageView.heightAnchor.constraint(equalToConstant: 50),
             
             activityIndicator.centerXAnchor.constraint(equalTo: imageView.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: imageView.centerYAnchor),
-            
-            amountLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-            amountLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            amountLabel.trailingAnchor.constraint(lessThanOrEqualTo: imageView.leadingAnchor, constant: -8),
-            
-            amountLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-            amountLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            
-            categoryLabel.topAnchor.constraint(equalTo: amountLabel.bottomAnchor, constant: 4),
-            categoryLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            
-            dateLabel.topAnchor.constraint(equalTo: categoryLabel.bottomAnchor, constant: 4),
-            dateLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            dateLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8)
+            activityIndicator.centerYAnchor.constraint(equalTo: imageView.centerYAnchor)
         ])
     }
     
     func configure(with viewModel: ExpenseItem) {
-        amountLabel.text = viewModel.amount
-        categoryLabel.text = viewModel.category
-        dateLabel.text = viewModel.date
+        amountLabel.configure(with: DSLabelViewModel(text: viewModel.amount, style: .body))
+        categoryLabel.configure(with: DSLabelViewModel(text: viewModel.category, style: .body))
+        dateLabel.configure(with: DSLabelViewModel(text: viewModel.date, style: .caption))
+        
         imageView.image = nil
         activityIndicator.startAnimating()
         
-        if let url = URL(string: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsyUbmjer47M8-qR6gCIoiLEdz_89XkbJB9w&s") {
+        if let imageURL = viewModel.imageURL, let url = URL(string: imageURL) {
             URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
                 DispatchQueue.main.async {
                     self?.activityIndicator.stopAnimating()
                     if let data = data, let image = UIImage(data: data) {
                         self?.imageView.image = image
+                    } else {
+                        self?.imageView.image = UIImage(named: "placeholder")
                     }
                 }
             }.resume()
+        } else {
+            activityIndicator.stopAnimating()
+            imageView.image = UIImage(named: "placeholder")
         }
     }
 }
