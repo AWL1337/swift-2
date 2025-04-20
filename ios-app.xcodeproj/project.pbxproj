@@ -25,6 +25,9 @@
 		D6AAA5BE2DB425F80037004A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6AAA5BD2DB425EE0037004A /* LoginViewController.swift */; };
 		D6AAA5C32DB430750037004A /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6AAA5C22DB430750037004A /* AppCoordinator.swift */; };
 		D6AAA5C52DB432DE0037004A /* ExpenseCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6AAA5C42DB432DE0037004A /* ExpenseCache.swift */; };
+		D6BA09242DB582090069841A /* TableManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BA09232DB582090069841A /* TableManagerProtocol.swift */; };
+		D6BA09262DB583500069841A /* ExpenseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BA09252DB583500069841A /* ExpenseView.swift */; };
+		D6BA09282DB5836A0069841A /* ConfigurableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BA09272DB5836A0069841A /* ConfigurableView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +51,9 @@
 		D6AAA5BD2DB425EE0037004A /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		D6AAA5C22DB430750037004A /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		D6AAA5C42DB432DE0037004A /* ExpenseCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseCache.swift; sourceTree = "<group>"; };
+		D6BA09232DB582090069841A /* TableManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableManagerProtocol.swift; sourceTree = "<group>"; };
+		D6BA09252DB583500069841A /* ExpenseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseView.swift; sourceTree = "<group>"; };
+		D6BA09272DB5836A0069841A /* ConfigurableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurableView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +114,7 @@
 		D60C80682D99CEB300B7DD58 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				D6BA09202DB580780069841A /* Table */,
 				D6AAA5BD2DB425EE0037004A /* LoginViewController.swift */,
 				D6AAA5BB2DB425C50037004A /* ExpensesViewController.swift */,
 				D60C80722D99D6EC00B7DD58 /* SummaryView.swift */,
@@ -157,6 +164,16 @@
 				D6AAA5C22DB430750037004A /* AppCoordinator.swift */,
 			);
 			path = Coordinator;
+			sourceTree = "<group>";
+		};
+		D6BA09202DB580780069841A /* Table */ = {
+			isa = PBXGroup;
+			children = (
+				D6BA09272DB5836A0069841A /* ConfigurableView.swift */,
+				D6BA09252DB583500069841A /* ExpenseView.swift */,
+				D6BA09232DB582090069841A /* TableManagerProtocol.swift */,
+			);
+			path = Table;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -233,12 +250,15 @@
 				D6AAA5BE2DB425F80037004A /* LoginViewController.swift in Sources */,
 				D60C80662D99CE1B00B7DD58 /* DatePeriod.swift in Sources */,
 				D6AAA5BC2DB425D40037004A /* ExpensesViewController.swift in Sources */,
+				D6BA09282DB5836A0069841A /* ConfigurableView.swift in Sources */,
 				D6AAA5C52DB432DE0037004A /* ExpenseCache.swift in Sources */,
 				D60C80452D99557000B7DD58 /* AppDelegate.swift in Sources */,
+				D6BA09242DB582090069841A /* TableManagerProtocol.swift in Sources */,
 				D670D0772DA4F85000B1F092 /* ExpensesViewModel.swift in Sources */,
 				D60C80472D99557000B7DD58 /* SceneDelegate.swift in Sources */,
 				D6AAA5C32DB430750037004A /* AppCoordinator.swift in Sources */,
 				D60C80612D99CC5300B7DD58 /* User.swift in Sources */,
+				D6BA09262DB583500069841A /* ExpenseView.swift in Sources */,
 				D670D0732DA4EDA200B1F092 /* LoginViewModel.swift in Sources */,
 				D670D06F2DA4EC6500B1F092 /* AppRouter.swift in Sources */,
 				D670D0752DA4F81E00B1F092 /* ExpenseService.swift in Sources */,

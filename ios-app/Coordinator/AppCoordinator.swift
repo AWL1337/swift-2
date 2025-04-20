@@ -1,7 +1,7 @@
 import UIKit
 import Combine
 
-class AppCoordinator: ExpensesViewControllerDelegate, LoginViewControllerDelegate {
+class AppCoordinator: ExpensesViewControllerDelegate, LoginViewControllerDelegate, ExpenseSelectionDelegate {
     private let router: Router
     private var cancellables = Set<AnyCancellable>()
     private let expenseService: ExpenseService
@@ -9,22 +9,23 @@ class AppCoordinator: ExpensesViewControllerDelegate, LoginViewControllerDelegat
     init(router: Router, expenseService: ExpenseService = NetworkExpenseService()) {
         self.router = router
         self.expenseService = expenseService
-        print("AppCoordinator: Initialized")
     }
     
     func start() {
-        print("AppCoordinator: Starting app")
-        router.start()
-        if let navController = router.navigationController {
-            if let loginVC = navController.topViewController as? LoginViewController {
-                print("AppCoordinator: Setting delegate for LoginViewController")
-                loginVC.delegate = self
-            } else {
-                print("AppCoordinator: Failed to cast topViewController to LoginViewController, actual type: \(type(of: navController.topViewController))")
+            router.start()
+            if let navController = router.navigationController {
+                if let loginVC = navController.topViewController as? LoginViewController {
+                    loginVC.delegate = self
+                }
+                if let expensesVC = navController.topViewController as? ExpensesViewController {
+                    expensesVC.delegate = self
+                    expensesVC.selectionDelegate = self
+                }
             }
-        } else {
-            print("AppCoordinator: Navigation controller is nil")
         }
+    
+    func didSelectExpense(_ expense: ExpenseItem) {
+        print("AppCoordinator: Selected expense: \(expense.amount) - \(expense.category)")
     }
     
     func didLoginSuccessfully() {

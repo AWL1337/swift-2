@@ -5,6 +5,10 @@ protocol ExpensesViewControllerDelegate: AnyObject {
     func didRequestLogout()
 }
 
+protocol ExpenseSelectionDelegate: AnyObject {
+    func didSelectExpense(_ expense: ExpenseItem)
+}
+
 protocol ExpensesViewControllerProtocol: AnyObject {
     var tableView: UITableView { get }
     
@@ -14,15 +18,16 @@ protocol ExpensesViewControllerProtocol: AnyObject {
     func logout()
 }
 
-class ExpensesViewController: UIViewController, ExpensesViewControllerProtocol {
+class ExpensesViewController: UIViewController, ExpensesViewControllerProtocol, TableManagerDelegate {
     private let viewModel: ExpensesViewModel
     private var cancellables = Set<AnyCancellable>()
     weak var delegate: ExpensesViewControllerDelegate?
+    weak var selectionDelegate: ExpenseSelectionDelegate?
+    private let tableManager: TableManagerProtocol
     
     let tableView: UITableView = {
         let tv = UITableView()
         tv.translatesAutoresizingMaskIntoConstraints = false
-        tv.register(UITableViewCell.self, forCellReuseIdentifier: "ExpenseCell")
         return tv
     }()
     
@@ -34,9 +39,16 @@ class ExpensesViewController: UIViewController, ExpensesViewControllerProtocol {
         return btn
     }()
     
-    init(viewModel: ExpensesViewModel) {
+    private let refreshControl: UIRefreshControl = {
+        let rc = UIRefreshControl()
+        return rc
+    }()
+    
+    init(viewModel: ExpensesViewModel, tableManager: TableManagerProtocol = TableManager()) {
         self.viewModel = viewModel
+        self.tableManager = tableManager
         super.init(nibName: nil, bundle: nil)
+        (tableManager as? TableManager)?.delegate = self
     }
     
     required init?(coder: NSCoder) {
@@ -47,6 +59,7 @@ class ExpensesViewController: UIViewController, ExpensesViewControllerProtocol {
         super.viewDidLoad()
         setupUI()
         bindViewModel()
+        tableManager.setDataSource(for: tableView)
         viewModel.fetchExpenses()
     }
     
@@ -56,7 +69,12 @@ class ExpensesViewController: UIViewController, ExpensesViewControllerProtocol {
         
         view.addSubview(tableView)
         view.addSubview(logoutButton)
-        tableView.dataSource = self
+        
+        tableView.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+        
+        tableView.heightAnchor.constraint(greaterThanOrEqualToConstant: 100).isActive = true
+        logoutButton.widthAnchor.constraint(equalToConstant: 200).isActive = true
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -64,8 +82,7 @@ class ExpensesViewController: UIViewController, ExpensesViewControllerProtocol {
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: logoutButton.topAnchor, constant: -16),
             
-            logoutButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            logoutButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            logoutButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             logoutButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
             logoutButton.heightAnchor.constraint(equalToConstant: 44)
         ])
@@ -77,7 +94,8 @@ class ExpensesViewController: UIViewController, ExpensesViewControllerProtocol {
         viewModel.expenses
             .receive(on: DispatchQueue.main)
             .sink { [weak self] expenses in
-                print("Loaded expenses: \(expenses.count)")
+                print("ExpensesViewController: Loaded expenses: \(expenses.count)")
+                self?.tableManager.update(with: expenses)
                 self?.reloadData()
             }
             .store(in: &cancellables)
@@ -85,7 +103,7 @@ class ExpensesViewController: UIViewController, ExpensesViewControllerProtocol {
         viewModel.isLoading
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isLoading in
-                print("Loading: \(isLoading)")
+                print("ExpensesViewController: Loading: \(isLoading)")
                 self?.setLoading(isLoading)
             }
             .store(in: &cancellables)
@@ -94,7 +112,7 @@ class ExpensesViewController: UIViewController, ExpensesViewControllerProtocol {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] message in
                 if let message = message {
-                    print("Error: \(message)")
+                    print("ExpensesViewController: Error: \(message)")
                     self?.showError(message)
                 }
             }
@@ -102,17 +120,24 @@ class ExpensesViewController: UIViewController, ExpensesViewControllerProtocol {
     }
     
     func reloadData() {
+        print("ExpensesViewController: Reloading table with \(viewModel.expenses.value.count) expenses")
         tableView.reloadData()
     }
     
     func showError(_ message: String) {
+        print("ExpensesViewController: Showing error: \(message)")
         let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
     
     func setLoading(_ isLoading: Bool) {
-        print("Set loading state: \(isLoading)")
+        print("ExpensesViewController: Set loading state: \(isLoading)")
+        if isLoading {
+            refreshControl.beginRefreshing()
+        } else {
+            refreshControl.endRefreshing()
+        }
     }
     
     func logout() {
@@ -120,19 +145,17 @@ class ExpensesViewController: UIViewController, ExpensesViewControllerProtocol {
     }
     
     @objc private func logoutTapped() {
+        print("ExpensesViewController: Logout button tapped")
         logout()
     }
-}
-
-extension ExpensesViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        viewModel.expenses.value.count
+    
+    @objc private func refreshData() {
+        print("ExpensesViewController: Pull-to-Refresh triggered")
+        viewModel.fetchExpenses()
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ExpenseCell", for: indexPath)
-        let expense = viewModel.expenses.value[indexPath.row]
-        cell.textLabel?.text = "\(expense.amount) - \(expense.category) (\(expense.date))"
-        return cell
+    func didSelectExpense(_ expense: ExpenseItem) {
+        print("ExpensesViewController: Delegate selected expense: \(expense.amount) - \(expense.category)")
+        selectionDelegate?.didSelectExpense(expense)
     }
 }

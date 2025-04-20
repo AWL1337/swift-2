@@ -33,13 +33,13 @@ class ExpensesViewModel {
     }
 }
 
-// Модель для отображения
 struct ExpenseItem {
     let id: UUID
     let amount: String
     let category: String
     let date: String
     let note: String?
+    let imageURL: String?
     
     init(from expense: Expense) {
         self.id = expense.id
@@ -47,5 +47,6 @@ struct ExpenseItem {
         self.category = expense.category
         self.date = DateFormatter.localizedString(from: expense.date, dateStyle: .medium, timeStyle: .none)
         self.note = expense.note
+        self.imageURL = nil
     }
 }

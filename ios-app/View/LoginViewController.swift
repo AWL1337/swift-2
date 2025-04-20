@@ -122,16 +122,6 @@ class LoginViewController: UIViewController, LoginViewControllerProtocol {
             stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -20),
             stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -40)
         ])
-        
-        // Отладка размеров
-        DispatchQueue.main.async {
-            print("LoginViewController: ScrollView frame: \(self.scrollView.frame)")
-            print("LoginViewController: StackView frame: \(self.stackView.frame)")
-            print("LoginViewController: EmailTextField frame: \(self.emailTextField.frame)")
-            print("LoginViewController: PasswordTextField frame: \(self.passwordTextField.frame)")
-            print("LoginViewController: LoginButton frame: \(self.loginButton.frame)")
-            print("LoginViewController: ErrorLabel frame: \(self.errorLabel.frame)")
-        }
     }
     
     private func bindViewModel() {

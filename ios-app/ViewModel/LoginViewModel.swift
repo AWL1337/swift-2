@@ -1,4 +1,4 @@
-import Foundation // Добавляем импорт Foundation
+import Foundation
 import Combine
 
 class LoginViewModel {
