@@ -105,6 +105,11 @@ class LoginViewController: UIViewController, LoginViewControllerProtocol {
         stackView.addArrangedSubview(loginButton)
         stackView.addArrangedSubview(errorLabel)
         
+        emailTextField.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        passwordTextField.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        loginButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        errorLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 20).isActive = true
+        
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -117,6 +122,16 @@ class LoginViewController: UIViewController, LoginViewControllerProtocol {
             stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -20),
             stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -40)
         ])
+        
+        // Отладка размеров
+        DispatchQueue.main.async {
+            print("LoginViewController: ScrollView frame: \(self.scrollView.frame)")
+            print("LoginViewController: StackView frame: \(self.stackView.frame)")
+            print("LoginViewController: EmailTextField frame: \(self.emailTextField.frame)")
+            print("LoginViewController: PasswordTextField frame: \(self.passwordTextField.frame)")
+            print("LoginViewController: LoginButton frame: \(self.loginButton.frame)")
+            print("LoginViewController: ErrorLabel frame: \(self.errorLabel.frame)")
+        }
     }
     
     private func bindViewModel() {
@@ -175,12 +190,26 @@ class LoginViewController: UIViewController, LoginViewControllerProtocol {
     }
     
     @objc private func onLoginButtonTapped(_ sender: UIButton) {
+        print("LoginViewController: Login button tapped")
         loginTapped { [weak self] success in
+            print("LoginViewController: Login completion called, success: \(success)")
             if success {
-                print("Login successful")
-                self?.delegate?.didLoginSuccessfully()
+                print("LoginViewController: Login successful")
+                if let delegate = self?.delegate {
+                    print("LoginViewController: Delegate is set, calling didLoginSuccessfully")
+                    delegate.didLoginSuccessfully()
+                } else {
+                    print("LoginViewController: Delegate is nil, cannot call didLoginSuccessfully")
+                }
+            } else {
+                print("LoginViewController: Login failed")
             }
         }
+    }
+
+    func loginTapped(completion: @escaping (Bool) -> Void) {
+        print("LoginViewController: loginTapped called")
+        viewModel.login(completion: completion)
     }
     
     func emailChanged(_ text: String) {
@@ -189,10 +218,6 @@ class LoginViewController: UIViewController, LoginViewControllerProtocol {
     
     func passwordChanged(_ text: String) {
         viewModel.password = text
-    }
-    
-    func loginTapped(completion: @escaping (Bool) -> Void) {
-        viewModel.login(completion: completion)
     }
     
     func updateLoginButtonState() {
