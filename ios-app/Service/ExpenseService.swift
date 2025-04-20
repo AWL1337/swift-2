@@ -2,17 +2,18 @@ import Foundation
 
 protocol ExpenseService {
     func fetchExpenses(page: Int, perPage: Int, completion: @escaping (Result<[Expense], Error>) -> Void)
+    func clearCache() throws
 }
 
 class NetworkExpenseService: ExpenseService {
-    private let cacheURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0].appendingPathComponent("expenses.json")
-    private let cacheExpiration: TimeInterval = 3600
+    private let cache: ExpenseCache
+    
+    init(cache: ExpenseCache = ExpenseCache()) {
+        self.cache = cache
+    }
     
     func fetchExpenses(page: Int, perPage: Int, completion: @escaping (Result<[Expense], Error>) -> Void) {
-        if let cachedData = try? Data(contentsOf: cacheURL),
-           let cachedExpenses = try? JSONDecoder().decode([Expense].self, from: cachedData),
-           let cacheDate = try? FileManager.default.attributesOfItem(atPath: cacheURL.path)[.modificationDate] as? Date,
-           Date().timeIntervalSince(cacheDate) < cacheExpiration {
+        if let cachedExpenses = cache.load() {
             completion(.success(cachedExpenses))
             return
         }
@@ -28,15 +29,25 @@ class NetworkExpenseService: ExpenseService {
                 completion(.failure(error))
                 return
             }
-            guard let data = data else { return }
+            
+            guard let data = data else {
+                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "No data received"])))
+                return
+            }
             
             do {
-                let expenses = try JSONDecoder().decode([Expense].self, from: data)
-                try? data.write(to: self?.cacheURL ?? URL(fileURLWithPath: ""))
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .iso8601 // Настройка для ISO 8601
+                let expenses = try decoder.decode([Expense].self, from: data)
+                try? self?.cache.save(expenses)
                 completion(.success(expenses))
             } catch {
                 completion(.failure(error))
             }
         }.resume()
+    }
+    
+    func clearCache() throws {
+        try cache.clear()
     }
 }

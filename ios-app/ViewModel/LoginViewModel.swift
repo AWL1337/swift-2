@@ -1,71 +1,47 @@
 import Foundation
+import Combine
 
 class LoginViewModel {
     private let authService: AuthService
-    var email: String = "" {
-        didSet { validateEmail() }
-    }
-    var password: String = "" {
-        didSet { validatePassword() }
-    }
-    var errorMessage: Observable<String?> = Observable(nil)
-    var isLoading: Observable<Bool> = Observable(false)
-    var isEmailValid: Observable<Bool> = Observable(false)
-    var isPasswordValid: Observable<Bool> = Observable(false)
+    private var cancellables = Set<AnyCancellable>()
+    
+    @Published var email: String = ""
+    @Published var password: String = ""
+    @Published var isEmailValid: Bool = false
+    @Published var isPasswordValid: Bool = false
+    @Published var isLoading: Bool = false
+    @Published var errorMessage: String? = nil
     
     init(authService: AuthService) {
         self.authService = authService
+        
+        $email
+            .debounce(for: .milliseconds(300), scheduler: DispatchQueue.main)
+            .map { $0.contains("@") && $0.contains(".") }
+            .assign(to: \.isEmailValid, on: self)
+            .store(in: &cancellables)
+        
+        $password
+            .debounce(for: .milliseconds(300), scheduler: DispatchQueue.main)
+            .map { $0.count >= 6 }
+            .assign(to: \.isPasswordValid, on: self)
+            .store(in: &cancellables)
     }
     
     func login(completion: @escaping (Bool) -> Void) {
-        guard isEmailValid.value, isPasswordValid.value else {
-            errorMessage.value = "Please enter a valid email and password"
-            return
-        }
-        
-        isLoading.value = true
+        isLoading = true
         authService.login(email: email, password: password) { [weak self] result in
-            self?.isLoading.value = false
-            switch result {
-            case .success(let user):
-                print("Logged in user: \(user.name)")
-                completion(true)
-            case .failure(let error):
-                self?.errorMessage.value = error.localizedDescription
-                completion(false)
-            }
-        }
-    }
-    
-    private func validateEmail() {
-        let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
-        let predicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
-        isEmailValid.value = predicate.evaluate(with: email) && !email.isEmpty
-    }
-    
-    private func validatePassword() {
-        isPasswordValid.value = password.count >= 6
-    }
-}
-
-class Observable<T> {
-    var value: T {
-        didSet {
             DispatchQueue.main.async {
-                self.listener?(self.value)
+                self?.isLoading = false
+                switch result {
+                case .success(let user):
+                    print("Logged in user: \(user.name)")
+                    completion(true)
+                case .failure(let error):
+                    self?.errorMessage = error.localizedDescription
+                    completion(false)
+                }
             }
-        }
-    }
-    private var listener: ((T) -> Void)?
-    
-    init(_ value: T) {
-        self.value = value
-    }
-    
-    func bind(_ listener: @escaping (T) -> Void) {
-        self.listener = listener
-        DispatchQueue.main.async {
-            listener(self.value)
         }
     }
 }
