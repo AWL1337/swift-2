@@ -13,29 +13,6 @@ class AppCoordinator: ExpensesViewControllerDelegate {
     
     func start() {
         router.start()
-        if let navController = router.navigationController,
-           let loginVC = navController.topViewController as? LoginViewControllerProtocol {
-            bindLoginViewModel(from: loginVC)
-        }
-    }
-    
-    private func bindLoginViewModel(from loginVC: LoginViewControllerProtocol) {
-        loginVC.viewModel.isLoading
-            .filter { !$0 }
-            .sink { [weak self] (_: Bool) in
-                loginVC.viewModel.login { success in
-                    if success {
-                        DispatchQueue.main.async {
-                            self?.router.showExpensesScreen()
-                            if let navController = self?.router.navigationController,
-                               let expensesVC = navController.topViewController as? ExpensesViewControllerProtocol {
-                                (expensesVC as? ExpensesViewController)?.delegate = self
-                            }
-                        }
-                    }
-                }
-            }
-            .store(in: &cancellables)
     }
     
     func didRequestLogout() {

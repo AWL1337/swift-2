@@ -33,9 +33,14 @@ class AppRouter: Router {
     }
     
     func showExpensesScreen() {
+        print("Showing expenses screen")
+        guard let navController = _navigationController else {
+            print("Error: Navigation controller is nil")
+            return
+        }
         let expenseService = NetworkExpenseService()
         let viewModel = ExpensesViewModel(expenseService: expenseService)
         let expensesVC = ExpensesViewController(viewModel: viewModel)
-        _navigationController?.pushViewController(expensesVC, animated: true)
+        navController.pushViewController(expensesVC, animated: true)
     }
 }

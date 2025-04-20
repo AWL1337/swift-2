@@ -1,6 +1,10 @@
 import UIKit
 import Combine
 
+protocol LoginViewControllerDelegate: AnyObject {
+    func didLoginSuccessfully()
+}
+
 protocol LoginViewControllerProtocol: AnyObject {
     var emailTextField: UITextField { get }
     var passwordTextField: UITextField { get }
@@ -17,6 +21,7 @@ protocol LoginViewControllerProtocol: AnyObject {
 class LoginViewController: UIViewController, LoginViewControllerProtocol {
     let viewModel: LoginViewModel
     private var cancellables = Set<AnyCancellable>()
+    weak var delegate: LoginViewControllerDelegate?
     
     let emailTextField: UITextField = {
         let tf = UITextField()
@@ -118,7 +123,7 @@ class LoginViewController: UIViewController, LoginViewControllerProtocol {
         emailTextField.addTarget(self, action: #selector(onEmailTextChanged), for: .editingChanged)
         passwordTextField.addTarget(self, action: #selector(onPasswordTextChanged), for: .editingChanged)
         
-        viewModel.isEmailValid
+        viewModel.$isEmailValid
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isValid in
                 self?.emailTextField.layer.borderColor = isValid ? UIColor.green.cgColor : UIColor.red.cgColor
@@ -126,7 +131,7 @@ class LoginViewController: UIViewController, LoginViewControllerProtocol {
             }
             .store(in: &cancellables)
         
-        viewModel.isPasswordValid
+        viewModel.$isPasswordValid
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isValid in
                 self?.passwordTextField.layer.borderColor = isValid ? UIColor.green.cgColor : UIColor.red.cgColor
@@ -134,7 +139,7 @@ class LoginViewController: UIViewController, LoginViewControllerProtocol {
             }
             .store(in: &cancellables)
         
-        viewModel.errorMessage
+        viewModel.$errorMessage
             .receive(on: DispatchQueue.main)
             .sink { [weak self] message in
                 self?.errorLabel.text = message
@@ -147,7 +152,7 @@ class LoginViewController: UIViewController, LoginViewControllerProtocol {
             }
             .store(in: &cancellables)
         
-        viewModel.isLoading
+        viewModel.$isLoading
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isLoading in
                 self?.loginButton.isEnabled = !isLoading
@@ -170,9 +175,10 @@ class LoginViewController: UIViewController, LoginViewControllerProtocol {
     }
     
     @objc private func onLoginButtonTapped(_ sender: UIButton) {
-        loginTapped { success in
+        loginTapped { [weak self] success in
             if success {
                 print("Login successful")
+                self?.delegate?.didLoginSuccessfully()
             }
         }
     }
@@ -190,8 +196,8 @@ class LoginViewController: UIViewController, LoginViewControllerProtocol {
     }
     
     func updateLoginButtonState() {
-        let isFormValid = viewModel.isEmailValid.value && viewModel.isPasswordValid.value
-        loginButton.isEnabled = isFormValid && !viewModel.isLoading.value
+        let isFormValid = viewModel.isEmailValid && viewModel.isPasswordValid
+        loginButton.isEnabled = isFormValid && !viewModel.isLoading
         loginButton.alpha = loginButton.isEnabled ? 1.0 : 0.5
     }
 }
