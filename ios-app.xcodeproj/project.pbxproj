@@ -34,6 +34,11 @@
 		D6BA09332DB58A100069841A /* DSTextInputViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BA09322DB58A100069841A /* DSTextInputViewModel.swift */; };
 		D6BA09352DB58A3A0069841A /* DSStackViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BA09342DB58A3A0069841A /* DSStackViewModel.swift */; };
 		D6BA09372DB58A4D0069841A /* DSCardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BA09362DB58A4D0069841A /* DSCardViewModel.swift */; };
+		D6EF9A182DB6AEDB007E6CA5 /* ViewModelUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6EF9A172DB6AED1007E6CA5 /* ViewModelUI.swift */; };
+		D6EF9A1A2DB6AF62007E6CA5 /* ConstantsUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6EF9A192DB6AF58007E6CA5 /* ConstantsUI.swift */; };
+		D6EF9A1C2DB6AF9A007E6CA5 /* StyleMappingUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6EF9A1B2DB6AF8F007E6CA5 /* StyleMappingUI.swift */; };
+		D6EF9A1E2DB6AFDA007E6CA5 /* MapperUIProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6EF9A1D2DB6AFBF007E6CA5 /* MapperUIProtocol.swift */; };
+		D6EF9A202DB6B07E007E6CA5 /* ComponentMapperUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6EF9A1F2DB6B06F007E6CA5 /* ComponentMapperUI.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,6 +71,11 @@
 		D6BA09322DB58A100069841A /* DSTextInputViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSTextInputViewModel.swift; sourceTree = "<group>"; };
 		D6BA09342DB58A3A0069841A /* DSStackViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSStackViewModel.swift; sourceTree = "<group>"; };
 		D6BA09362DB58A4D0069841A /* DSCardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSCardViewModel.swift; sourceTree = "<group>"; };
+		D6EF9A172DB6AED1007E6CA5 /* ViewModelUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelUI.swift; sourceTree = "<group>"; };
+		D6EF9A192DB6AF58007E6CA5 /* ConstantsUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConstantsUI.swift; sourceTree = "<group>"; };
+		D6EF9A1B2DB6AF8F007E6CA5 /* StyleMappingUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleMappingUI.swift; sourceTree = "<group>"; };
+		D6EF9A1D2DB6AFBF007E6CA5 /* MapperUIProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapperUIProtocol.swift; sourceTree = "<group>"; };
+		D6EF9A1F2DB6B06F007E6CA5 /* ComponentMapperUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentMapperUI.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +108,7 @@
 		D60C80432D99557000B7DD58 /* ios-app */ = {
 			isa = PBXGroup;
 			children = (
+				D6EF9A162DB6AEB7007E6CA5 /* MapperUI */,
 				D6BA09292DB5896E0069841A /* DesignSystem */,
 				D6AAA5BF2DB4304D0037004A /* Coordinator */,
 				D670D0702DA4ED9300B1F092 /* App */,
@@ -218,6 +229,18 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
+		D6EF9A162DB6AEB7007E6CA5 /* MapperUI */ = {
+			isa = PBXGroup;
+			children = (
+				D6EF9A1F2DB6B06F007E6CA5 /* ComponentMapperUI.swift */,
+				D6EF9A1D2DB6AFBF007E6CA5 /* MapperUIProtocol.swift */,
+				D6EF9A1B2DB6AF8F007E6CA5 /* StyleMappingUI.swift */,
+				D6EF9A192DB6AF58007E6CA5 /* ConstantsUI.swift */,
+				D6EF9A172DB6AED1007E6CA5 /* ViewModelUI.swift */,
+			);
+			path = MapperUI;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -291,7 +314,9 @@
 			files = (
 				D6BA09352DB58A3A0069841A /* DSStackViewModel.swift in Sources */,
 				D6BA092D2DB589B60069841A /* DSTokens.swift in Sources */,
+				D6EF9A182DB6AEDB007E6CA5 /* ViewModelUI.swift in Sources */,
 				D6AAA5BE2DB425F80037004A /* LoginViewController.swift in Sources */,
+				D6EF9A1C2DB6AF9A007E6CA5 /* StyleMappingUI.swift in Sources */,
 				D60C80662D99CE1B00B7DD58 /* DatePeriod.swift in Sources */,
 				D6AAA5BC2DB425D40037004A /* ExpensesViewController.swift in Sources */,
 				D6BA09372DB58A4D0069841A /* DSCardViewModel.swift in Sources */,
@@ -299,6 +324,7 @@
 				D6BA09282DB5836A0069841A /* ConfigurableView.swift in Sources */,
 				D6AAA5C52DB432DE0037004A /* ExpenseCache.swift in Sources */,
 				D60C80452D99557000B7DD58 /* AppDelegate.swift in Sources */,
+				D6EF9A1A2DB6AF62007E6CA5 /* ConstantsUI.swift in Sources */,
 				D6BA09242DB582090069841A /* TableManagerProtocol.swift in Sources */,
 				D670D0772DA4F85000B1F092 /* ExpensesViewModel.swift in Sources */,
 				D6BA09312DB589F50069841A /* DSButtonViewModel.swift in Sources */,
@@ -308,8 +334,10 @@
 				D6BA09262DB583500069841A /* ExpenseView.swift in Sources */,
 				D6BA09332DB58A100069841A /* DSTextInputViewModel.swift in Sources */,
 				D670D0732DA4EDA200B1F092 /* LoginViewModel.swift in Sources */,
+				D6EF9A1E2DB6AFDA007E6CA5 /* MapperUIProtocol.swift in Sources */,
 				D670D06F2DA4EC6500B1F092 /* AppRouter.swift in Sources */,
 				D670D0752DA4F81E00B1F092 /* ExpenseService.swift in Sources */,
+				D6EF9A202DB6B07E007E6CA5 /* ComponentMapperUI.swift in Sources */,
 				D60C80632D99CDA100B7DD58 /* Expense.swift in Sources */,
 				D60C80732D99D6EC00B7DD58 /* SummaryView.swift in Sources */,
 				D670D06B2DA4EAA500B1F092 /* AuthService.swift in Sources */,
